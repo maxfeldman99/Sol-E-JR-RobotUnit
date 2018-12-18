@@ -25,17 +25,19 @@ public class Server implements Runnable {
 				socket  = serverSocket.accept();
 				inputStream = new ObjectInputStream(socket.getInputStream());
 				outputStream = new ObjectOutputStream(socket.getOutputStream());
-				String str = (String)inputStream.readUTF();
+				String str = (String)inputStream.readObject();
 				System.out.println("messege: "+str);
 				} catch (IOException e) {
 				e.printStackTrace();
 				
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			} finally {
 				
 				try {
 					serverSocket.close();
 					socket.close();
-					SERVER_IS_RUNNING = false;
+					//SERVER_IS_RUNNING = false;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
