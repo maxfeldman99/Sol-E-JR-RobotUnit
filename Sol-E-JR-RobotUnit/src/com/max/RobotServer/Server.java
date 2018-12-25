@@ -5,6 +5,13 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.google.gson.Gson;
+import com.max.controller.RobotController;
+import com.max.models.Request;
+
+import lejos.hardware.Sound;
+import lejos.utility.Delay;
+
 public class Server implements Runnable {
 
 	private final int PORT = 12345;
@@ -14,7 +21,14 @@ public class Server implements Runnable {
 	private ServerSocket serverSocket;
 	private Socket socket;
 	
-	public Server() {
+	private Gson gson;
+	private RobotController controller;
+	// test
+	
+	public Server() 
+	{
+		controller = RobotController.getInstance();
+		gson = new Gson();
 	}
 		
 		@Override
@@ -24,20 +38,30 @@ public class Server implements Runnable {
 				serverSocket= new ServerSocket(PORT);
 				socket  = serverSocket.accept();
 				inputStream = new ObjectInputStream(socket.getInputStream());
-				outputStream = new ObjectOutputStream(socket.getOutputStream());
+				//outputStream = new ObjectOutputStream(socket.getOutputStream());
 				String str = (String)inputStream.readObject();
-				System.out.println("messege: "+str);
+				//System.out.println("messege: "+str);
+				
+				
+				Request request = gson.fromJson(str, Request.class);
+				
+				
+				
+				controller.executeSequence(request.getSequence());
+				
+				
 				} catch (IOException e) {
 				e.printStackTrace();
 				
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} finally {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
 				
 				try {
 					serverSocket.close();
 					socket.close();
-					//SERVER_IS_RUNNING = false;
+					SERVER_IS_RUNNING = false;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

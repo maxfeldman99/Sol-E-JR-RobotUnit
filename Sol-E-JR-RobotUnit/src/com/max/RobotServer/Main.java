@@ -5,7 +5,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		Server server = new Server();
 		int MAX_CLIENTS = 1;
 		ThreadPoolExecutor threadPoolExecutor;
